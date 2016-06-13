@@ -18,9 +18,20 @@
 	$$ \left( \begin{array}{ccccccc} l & a_0 & \ldots & a_n & b_0 & \ldots & b_n \\ \end{array} \right) $$
 	with notation as above.
 
+	\section*{Description of Methods}
+	\subsection*{De Casteljau algorithm and curve splitting}
+	Given a Bèzier Curve of degree $n$, it is possible to evaluate the curve at the time $t_0$ and split it in two
+	curves with an algorithm taking only $n$ steps. We set the recurrence relation:
+	$$ \beta_i^{(0)} := \beta_i \qquad i = 0, \ldots, n $$
+	$$ \beta_i^{(j)} := \beta_i^{(j-1)} (1 - t_0) + \beta_{i+1}^{(j-1)} t_0 \qquad i = 0, \ldots, n-j, \quad j = 1 , \ldots, n $$
+	where the $\beta_i$ are multi-coordinate points. The evaluation of the Bèzier curve at time $t_0$ is $B(t_0) = \beta_0^{(n)}$
+	and the curve can be split into two curves with control points respectively: $\beta_0^{(0)}, \beta_0^{(1)}, \ldots, \beta_0^{(n)}$
+	and $\beta_0^{(n)}, \beta_1^{(n-1)}, \ldots, \beta_n^{(0)}$. \\
+
 	\section*{Description of Procedures}
 	\subsection*{DistanceFromPoint}
-	We use the De Casteljau algorithm for splitting a Bèzier curve in halfes recursively, and taking the minimun of the
-	distances on the two halves. When 
+	We use the De Casteljau algorithm for splitting a Bèzier curve in halfes recursively, and taking the minimum of the
+	distances on the two halves. When the piece of curve is almost a line, we calculate the minimum point distance and return. \\
+	We then base on paper {\it bez.pdf} to measure the flatness of a curve and to do the appropriate math for a line segment.
 
 \end{document}
