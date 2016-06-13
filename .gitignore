@@ -1,4 +1,7 @@
 *.save
 *#
 *~
-
+*.aux
+*.log
+*.aut
+*.cls

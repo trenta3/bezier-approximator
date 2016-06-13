@@ -1,1 +1,26 @@
+\documentclass[a4paper,NoNotes,GeneralMath]{stdmdoc}
 
+\begin{document}
+	\title{Bèzier Approximating an Image}
+	\author{Dario Balboni}	
+	\autodate
+
+	\section*{Definitions}
+	\subsection*{Fat Bèzier Curve}
+	We define a Bèzier Curve of degree $n$ to be the image of the function $\phi: [0, 1] \rar \bbR^2$ defined by
+	$$ \phi(t) = (\sum_{i=0}^n a_i \binom{n}{i} t^i (1-t)^{n-i},  \sum_{i=0}^n b_i \binom{n}{i} t^i (1-t)^{n-i}) $$
+	where the $a_i$ and $b_i$ are parameters of the curve. A Fat Bèzier Curve is the set of points in $\bbR^2$ which
+	distance from $\Img \phi$ is less then a defined quantity $l$.
+
+	\section*{Descriptions of Structures}
+	\subsection*{Fat Bèzier Curve}
+	We represent a Fat Bèzier Curve in a row matrix with the following structure:
+	$$ \left( \begin{array}{ccccccc} l & a_0 & \ldots & a_n & b_0 & \ldots & b_n \\ \end{array} \right) $$
+	with notation as above.
+
+	\section*{Description of Procedures}
+	\subsection*{DistanceFromPoint}
+	We use the De Casteljau algorithm for splitting a Bèzier curve in halfes recursively, and taking the minimun of the
+	distances on the two halves. When 
+
+\end{document}
