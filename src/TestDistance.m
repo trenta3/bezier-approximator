@@ -10,6 +10,12 @@ lines = [
 	0, 18, -2, 18, -12;
 ];
 
+curves = [];
+% We convert lines to 3-deg bezier curves
+for i = 1:size(lines,1)
+	curves(i, :) = [lines(i, 1), (lines(i, 2)*[3 2 1 0] + lines(i, 3)*[0 1 2 3])./3, (lines(i, 4)*[3 2 1 0] + lines(i, 5)*[0 1 2 3])./3];
+endfor
+
 points = [
 	8, 3;
 	1, 0;
@@ -31,9 +37,9 @@ for i = 1:size(lines,1)
 	lx = t * lines(i, 2) + (1 - t) * lines(i, 4);
 	ly = t * lines(i, 3) + (1 - t) * lines(i, 5);
 	d = (lx - points(i, 1))^2 + (ly - points(i, 2))^2;
-	[bd, bx, by] = DistanceFromPoint(lines(i, :), points(i, :), eps);
+	[bd, bp] = DistanceFromPoint(curves(i, :), points(i, :), eps);
 	% We now check if the distance is accurate enought
-	printf("Real distance: %g, Real point: %g, %g | Calculated distance: %g, Calculated point: %g, %g\n", d, lx, ly, bd, bx, by);
+	printf("Real distance: %g, Real point: %g, %g | Calculated distance: %g, Calculated point: %g, %g\n", d, lx, ly, bd, bp(1, 1), bp(1, 2));
 	if abs(bd - d) > eps
 		printf("ERROR TEST NOT PASSED: %g > %g\n", abs(bd - d), eps);
 	endif

@@ -10,7 +10,7 @@
 % 1 2   3   4   5   6   7   8   9
 function [dist, minp] = DistanceFromPoint (curve, point, eps)
 	% We first check if the curve is flat enought
-	if sum((curve(1, 2:5) - (curve(1, 2)*[0 1 2 3] + curve(1, 5)*[3 2 1 0]) ./ 3).^2 + (curve(1, 6:9) - (curve(1, 6)*[0 1 2 3] + curve(1, 9)*[3 2 1 0]) ./3).^2 <= eps^2 * [1 1 1 1]) == 4
+	if sum((curve(1, 2:5) - (curve(1, 2)*[3 2 1 0] + curve(1, 5)*[0 1 2 3]) ./ 3).^2 + (curve(1, 6:9) - (curve(1, 6)*[3 2 1 0] + curve(1, 9)*[0 1 2 3]) ./3).^2 <= eps^2 * [1 1 1 1]) == 4
 		% The curve is flat so we calculate the minimum
 		Q = [curve(1, 5), curve(1, 9)];
 		P = [curve(1, 2), curve(1, 6)];
@@ -46,17 +46,13 @@ function [dist, minp] = DistanceFromPoint (curve, point, eps)
 		l3x = (l2x + r1x)/2;
 		l3y = (l2y + r1y)/2;
 		
-		lcurve = [curve(1, 1),
-			curve(1, 2), l1x, l2x, l3x,
-			curve(1, 6), l1y, l2y, l3y];
+		lcurve = [curve(1, 1), curve(1, 2), l1x, l2x, l3x, curve(1, 6), l1y, l2y, l3y];
 		
-		rcurve = [curve(1, 1),
-			l3x, r1x, r2x, curve(1, 5),
-			l3y, r1y, r2y, curve(1, 9)];
+		rcurve = [curve(1, 1), l3x, r1x, r2x, curve(1, 5), l3y, r1y, r2y, curve(1, 9)];
 		
 		% We then recurse over the two subcurves
-		[ldist, lminp] = DistanceFromPoint (lcurve, point, eps)
-		[rdist, rminp] = DistanceFromPoint (rcurve, point, eps)
+		[ldist, lminp] = DistanceFromPoint (lcurve, point, eps);
+		[rdist, rminp] = DistanceFromPoint (rcurve, point, eps);
 		
 		% And after recursing over the two subcurves we return the minimum of the two
 		if ldist < rdist
