@@ -34,4 +34,9 @@
 	distances on the two halves. When the piece of curve is almost a line, we calculate the minimum point distance and return. \\
 	We then base on paper {\it bez.pdf} to measure the flatness of a curve and to do the appropriate math for a line segment.
 
+	\section*{Description of .bezier files}
+	We describe the structure of the .bezier files, that are produced after the regolarization of the input image. \\
+	On the first line of the file two numbers are given, that are the size of the canvas image, in this order: height width. \\
+	On every subsequent line the parameters of a bèzier curve are written, following the convention for the bèzier curve memorization (a row matrix). \\
+	
 \end{document}
