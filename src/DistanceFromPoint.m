@@ -16,7 +16,7 @@ function [dist, minp] = DistanceFromPoint (curve, point, eps)
 		P = [curve(1, 2), curve(1, 6)];
 		up = sum((point - Q) .* (P - Q));
 		down = sum((P - Q).^2);
-		t = up ./ down;
+		t = up / down;
 		if t <= 0
 			t = 0;
 		elseif t >= 1
@@ -49,6 +49,10 @@ function [dist, minp] = DistanceFromPoint (curve, point, eps)
 		lcurve = [curve(1, 1), curve(1, 2), l1x, l2x, l3x, curve(1, 6), l1y, l2y, l3y];
 		
 		rcurve = [curve(1, 1), l3x, r1x, r2x, curve(1, 5), l3y, r1y, r2y, curve(1, 9)];
+		
+		printf("\nThe curve is not flat, we are dividing in %g, %g\n", l3x, l3y);
+		disp(lcurve); disp(rcurve);
+		sleep(10);
 		
 		% We then recurse over the two subcurves
 		[ldist, lminp] = DistanceFromPoint (lcurve, point, eps);
