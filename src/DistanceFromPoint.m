@@ -28,8 +28,8 @@ function [d, p] = DistanceFromPoint (curve, point, eps)
 			t = 1;
 		endif
 		% TODO: (P - l(t))*(P - l(t));
-		dist = 
-		[d, p] = [dist, [t*curve(1, 2+n)+(1-t)*curve(1,2), t*curve(1, 2*n+3)+(1-t)*curve(1,3+n)]];
+		p = [t*curve(1, 2+n)+(1-t)*curve(1,2), t*curve(1, 2*n+3)+(1-t)*curve(1,3+n)];
+		d = (p(1,1) - point(1,1))^2 + (p(1,2) - point(1,2))^2;
 	else
 		% The curve is not flat, so we compute the two subcurves with de Casteljau algorithm and recurse
 		alpha = beta = [];
