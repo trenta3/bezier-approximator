@@ -5,7 +5,7 @@
 % @output: d is the square of the distance between point and curve
 %          p is an array with minimal point coordinates
 
-function [d, p] = DistanceFromPoint (curve, point, eps)
+function [d, px, py] = DistanceFromPoint (curve, point, eps)
 	% That's the degree
 	n = ((size(curve, 2) - 1) ./ 2) - 1;
 
@@ -17,19 +17,19 @@ function [d, p] = DistanceFromPoint (curve, point, eps)
 		rb = (curve(1, n+3) * i + curve(1, 2*n+3) * (n - i)) / n;
 		curveness += (curve(1, i+2) - ra)^2 + (curve(1, n+i+3) - rb)^2;
 	endfor
-	if curveness <= eps^2 then
+	if curveness <= eps^2
 		% The curve is flat. We can stop the recursion and return the response for a line
-		up = (p(1, 1) - curve(1, 2)) * (curve(1, 2+n) - curve(1, 2)) + (p(1, 2) - curve(1, 3+n)) * (curve(1, 2*n+3) - curve(1, 3+n));
+		up = (point(1, 1) - curve(1, 2)) * (curve(1, 2+n) - curve(1, 2)) + (point(1, 2) - curve(1, 3+n)) * (curve(1, 2*n+3) - curve(1, 3+n));
 		down = (curve(1, 2+n) - curve(1, 2))^2 + (curve(1, 2*n+3) - curve(1, 3+n))^2;
 		t = up ./ down;
-		if t <= 0 then
+		if t <= 0
 			t = 0;
-		elsif t >= 1 then
+		elseif t >= 1
 			t = 1;
 		endif
-		% TODO: (P - l(t))*(P - l(t));
-		p = [t*curve(1, 2+n)+(1-t)*curve(1,2), t*curve(1, 2*n+3)+(1-t)*curve(1,3+n)];
-		d = (p(1,1) - point(1,1))^2 + (p(1,2) - point(1,2))^2;
+		px = t*curve(1, 2+n)+(1-t)*curve(1,2);
+		py = t*curve(1, 2*n+3)+(1-t)*curve(1,3+n);
+		d = (px - point(1,1))^2 + (py - point(1,2))^2;
 	else
 		% The curve is not flat, so we compute the two subcurves with de Casteljau algorithm and recurse
 		alpha = beta = [];
@@ -50,14 +50,16 @@ function [d, p] = DistanceFromPoint (curve, point, eps)
 			c2(1, i+2) = alpha(n-i+1, i+1);
 			c2(1, n+3+i) = beta(n-i+1, i+1);
 		endfor
-		[d1, p1] = DistanceFromPoint(c1, point, eps);
-		[d2, p2] = DistanceFromPoint(c2, point, eps);
+		[d1, px1, py1] = DistanceFromPoint(c1, point, eps);
+		[d2, px2, py2] = DistanceFromPoint(c2, point, eps);
 		
 		% And now we return the nearest point
-		if d1 < d2 then
-			[d, p] = [d1, p1];
+		if d1 < d2
+			d = d1; px = px1; py = py1;
+%			[d, px, py] = [d1, px1, py1];
 		else
-			[d, p] = [d2, p2];
+			d = d2; px = px2; py = py2;
+%			[d, px, py] = [d2, px2, py2];
 		endif
 	endif
 endfunction
