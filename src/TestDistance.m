@@ -1,10 +1,11 @@
 % We test the DistanceFromPoint.m function with various curves and points
 
-eps = 0.01;
+eps = 0.1;
 
 % We first test the distance on some lines
 lines = [
 	0, -1.5, 1.5, 0, 0;
+	0, 0.625, 0.500, 0.01563, 0;
 	0, 1, 2, 8, 3;
 	0, 2, -5, -7, 10;
 	0, 21, 17, 0, 17;
@@ -19,6 +20,7 @@ endfor
 
 points = [
 	0, 1;
+	0.5, 0.25;
 	8, 3;
 	1, 0;
 	-2, 12;
@@ -61,13 +63,14 @@ for i = 1:size(parabolas,1)
 	b1 = parabolas(i, 2)/3 + parabolas(i, 3);
 	b2 = parabolas(i, 1)/3 + parabolas(i, 2)*2/3 + parabolas(i, 3);
 	b3 = sum(parabolas(i, :));
-	curves(i, :) = [0, 0, 1/3, 2/3, 1, parabolas(i, 3), b1, b2, b3];
+	%curves(i, :) = [0, 0, 1/3, 2/3, 1, parabolas(i, 3), b1, b2, b3];
+	curves(i, :) = [0, 1, 2/3, 1/3, 0, b3, b2, b1, parabolas(i, 3)];
 	% We calculate the foci of the parabolas, because we know the distances
 	D = parabolas(i, 2)^2 - 4 * parabolas(i, 1) * parabolas(i, 3);
 	points(i, :) = [-parabolas(i, 2)/(2 * parabolas(i, 1)), (1 - D)./(4 * parabolas(i, 1))];
 
 	% We check if the distances of the foci from the parabola are the calculated distances
-	d = 1/(4 * parabolas(i, 1));
+	d = 1/(4 * parabolas(i, 1))^2;
 	l = [- parabolas(i, 2) / (2 * parabolas(i, 1)), - D / (4 * parabolas(i, 1))];
 	[bd, bp] = DistanceFromPoint(curves(i, :), points(i, :), eps);
 	printf("Real distance: %g, Real point: %g, %g | Calculated distance: %g, Calculated point: %g, %g\n", d, l(1, 1), l(1, 2), bd, bp(1, 1), bp(1, 2));

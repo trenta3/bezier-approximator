@@ -50,10 +50,6 @@ function [dist, minp] = DistanceFromPoint (curve, point, eps)
 		
 		rcurve = [curve(1, 1), l3x, r1x, r2x, curve(1, 5), l3y, r1y, r2y, curve(1, 9)];
 		
-		printf("\nThe curve is not flat, we are dividing in %g, %g\n", l3x, l3y);
-		disp(lcurve); disp(rcurve);
-		sleep(10);
-		
 		% We then recurse over the two subcurves
 		[ldist, lminp] = DistanceFromPoint (lcurve, point, eps);
 		[rdist, rminp] = DistanceFromPoint (rcurve, point, eps);
