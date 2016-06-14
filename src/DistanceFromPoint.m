@@ -6,6 +6,7 @@
 %          p is an array with minimal point coordinates
 
 function [d, px, py] = DistanceFromPoint (curve, point, eps)
+	debug = 0;
 	% That's the degree
 	n = ((size(curve, 2) - 1) ./ 2) - 1;
 
@@ -17,6 +18,10 @@ function [d, px, py] = DistanceFromPoint (curve, point, eps)
 		rb = (curve(1, n+3) * i + curve(1, 2*n+3) * (n - i)) / n;
 		curveness += (curve(1, i+2) - ra)^2 + (curve(1, n+i+3) - rb)^2;
 	endfor
+	if debug == 1
+		printf("Curveness: %e\t", curveness);
+		disp(curve);
+	endif
 	if curveness <= eps^2
 		% The curve is flat. We can stop the recursion and return the response for a line
 		up = (point(1, 1) - curve(1, 2)) * (curve(1, 2+n) - curve(1, 2)) + (point(1, 2) - curve(1, 3+n)) * (curve(1, 2*n+3) - curve(1, 3+n));
@@ -30,6 +35,9 @@ function [d, px, py] = DistanceFromPoint (curve, point, eps)
 		px = t*curve(1, 2+n)+(1-t)*curve(1,2);
 		py = t*curve(1, 2*n+3)+(1-t)*curve(1,3+n);
 		d = (px - point(1,1))^2 + (py - point(1,2))^2;
+		if debug == 1
+			printf("distance: %e, point: (%e, %e)\n", d, px, py);
+		endif
 	else
 		% The curve is not flat, so we compute the two subcurves with de Casteljau algorithm and recurse
 		alpha = beta = [];
@@ -54,12 +62,13 @@ function [d, px, py] = DistanceFromPoint (curve, point, eps)
 		[d2, px2, py2] = DistanceFromPoint(c2, point, eps);
 		
 		% And now we return the nearest point
+		if debug == 1
+			printf("Choose between d1 = %e, p1 = (%e, %e), d2 = %e, p2 = (%e, %e)\n", d1, px1, py1, d2, px2, py2);
+		endif
 		if d1 < d2
 			d = d1; px = px1; py = py1;
-%			[d, px, py] = [d1, px1, py1];
 		else
 			d = d2; px = px2; py = py2;
-%			[d, px, py] = [d2, px2, py2];
 		endif
 	endif
 endfunction
