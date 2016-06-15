@@ -49,7 +49,7 @@ function [bezcurves] = ApproximateImage (imgname, n)
 		% Generate a lot of new little modified curves and calculate the fit for the set with each of these
 		for i = 1:generatenumber
 			trials(i, :) = newcurve + rand(1, 9) * [lstep, astep, astep, astep, astep, astep, astep, astep, astep];
-			fitpoint(i) = CalculateFit(image, [curves; trials(i, :)]);
+			fitpoint(i) = CalculateFit(image, mindist, indbez, curves, trials(i, :));
 		endfor
 		% Search for the best fit in this set of curves
 		[m, idx] = min(fitpoint);
