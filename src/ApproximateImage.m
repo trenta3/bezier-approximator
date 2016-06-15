@@ -1,10 +1,11 @@
 % @input: imgname is the name (a string) of the image file to approximate
 %         n is the degree of the Bèzier curves to be used in approximating
-% @output: bezcurves is the matrix in which, in every row there is a bèzier curve approximating
-%                    the given image at the required precision
+% @output: curves is the matrix in which, in every row there is a bèzier curve approximating
+%                 the given image at the required precision
 
-% TODO: the function is not yet complete
-function [bezcurves] = ApproximateImage (imgname, n)
+% @internal variables: mindist, matrix with current min distance of point from bezier curve
+%                      indbez, matrix with the index of the minimal curve from this point
+function [curves] = ApproximateImage (imgname, n)
 	% We first load the given image and store it in a matrix
 	% ACHTUNG: Currently the program only works with black and white images, not with grey-scale ones
 	image = imread(imgname);
@@ -36,8 +37,9 @@ function [bezcurves] = ApproximateImage (imgname, n)
 	% We create the set of bèzier curves
 	curves = [];
 	% The initial fit should be rather high or otherwise we can't see the betterings
-	prevfit = curfit = 1e80; 
+	prevfit = curfit = 1e80;
 	newcurve = [];
+	%% TODO: we first have to set all distances very high
 	while ! AreBlacksCovered(image, mindist)
 		if prevfit - curfit < delta
 			% Save the last curve in the curves matrix
@@ -47,6 +49,7 @@ function [bezcurves] = ApproximateImage (imgname, n)
 		endif
 		trials = fitpoint = [];
 		% Generate a lot of new little modified curves and calculate the fit for the set with each of these
+		%% TODO: After each generation, we chose to keep or reject the curve (in order to spare memory)
 		for i = 1:generatenumber
 			trials(i, :) = newcurve + rand(1, 9) * [lstep, astep, astep, astep, astep, astep, astep, astep, astep];
 			fitpoint(i) = CalculateFit(image, mindist, indbez, curves, trials(i, :));

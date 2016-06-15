@@ -8,9 +8,10 @@
 %         newindbez is the new indbez matrix
 
 % TODO: Better the white coverage part. I don't like it very much now
+% IDEA: We could weight the contribute of every single white pixel with his distance from black pixels
 % We iterate over black pixels and we compute the distance from our newest curve. We then compare it with
 % the previous minimum to calculate the actual distance of the point from the curve set. We then sum up
-% all this distances (they are all positive) and we also sum the white coverage coefficient (to be calculated)
+% all this distances (they are all positive) and we also sum the white coverage coefficient
 function [fitvalue, newmindist, newindbez] = CalculateFit (image, mindist, indbez, curves, newcurve)
 	% eps is the precision at which all math is done
 	eps = 0.05;

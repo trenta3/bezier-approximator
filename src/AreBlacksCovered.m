@@ -29,6 +29,6 @@ function [res] = AreBlacksCovered (image, mindist)
 			endif
 		endfor
 	endfor
-	% Else if the function didn't return before we return true
+	% Else if the function didn't return before, we return true
 	res = 1;
 endfunction
