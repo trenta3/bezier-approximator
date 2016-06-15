@@ -30,9 +30,17 @@ function [curves] = ApproximateImage (imgname, n)
 	% ON current curve DO
 	%       FOR i = 1:500
 	%               g' = g + rand * __
-	%               CALCULATE fit on set of curves (g' <-- g)
+	%               CALCULATE fit on set of curves (g <-- g')
 	%       IF exists j such that Fit(g_j') < Fit(g)
 	%               SUBSTITUTE g_j' FOR g
+	
+	% The fit function is computed in the following form
+	% We have internal variables mindist, indbez for performance improving
+	% FOR p \in image, p black DO
+	%       distfromg = Dist(p, g')
+	%       IF indbez(p) = g'
+	%               
+	%       fit += newdist
 
 	% We create the set of bèzier curves
 	curves = [];
