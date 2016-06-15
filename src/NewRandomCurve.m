@@ -7,7 +7,7 @@
 % and placing there the initial point of the curve. Other points are spread in a little area randomly
 % according to the maxspread variables for width and spatial dispersion
 % If there are none places that we like we signal this situation, and we choose the first point at random
-% TODO: Now the first point is chosen at random.
+% TODO: Now the first point is chosen at random. It should be picked up in a region with black points
 function [curve] = NewRandomCurve (image, mindist)
 	% lspread is the maximal dispersion of width in the curve
 	lspread = 1.5;

@@ -10,7 +10,7 @@ function [bezcurves] = ApproximateImage (imgname, n)
 	image = imread(imgname);
 	
 	% delta is the parameter such that if the bettering is lower than delta then we add a curve
-	delta = 1.0;
+	delta = 0.2;
 	% lstep is the maximum change in largeness of curve per step
 	lstep = 1.5;
 	% astep is the maximum change in position of control point of the curve per step
