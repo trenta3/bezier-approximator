@@ -4,5 +4,25 @@
 %                    the given image at the required precision
 
 function [bezcurves] = ApproximateImage (imgname, n)
-	% TODO: We have to write the while loop
+	% We first load the given image and store it in a matrix
+	% ACHTUNG: Currently the program only works with black and white images, not with grey-scales
+	image = imread(imgname);
+	
+	% We create the set of bèzier curves
+	curves = [];
+	% Following is a pseudo-code description of the program
+	% WHILE few blacks aren't covered:
+	%       IF the solution doesn't better in 10 steps:
+	%                ADD random chosen curve
+	%       PERFORM step
+	% ADJUST found curves (fine-tuning) for bettering the whole picture
+	
+	% Step is the following function:
+	% ON current curve do
+	%       FOR i = 1:50
+	%               g' = g + rand * __
+	%               CALCULATE fit on set of curves (g' <-- g)
+	%       IF exists j such that Fit(g_j') < Fit(g)
+	%               SUBSTITUTE g_j' FOR g
+
 endfunction
