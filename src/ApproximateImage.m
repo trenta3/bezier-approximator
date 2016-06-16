@@ -82,5 +82,6 @@ function [curves] = ApproximateImage (imgname, n)
 	%% TODO: Adjustement steps for a better looking image
 	
 	%% TODO: Now we outputs the image in bezier form
-	
+	% handle = fopen(outfile, 'wt');
+	% 
 endfunction
