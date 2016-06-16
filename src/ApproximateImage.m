@@ -12,7 +12,7 @@ function [curves] = ApproximateImage (imgname)
 	% delta is the parameter such that if the bettering is lower than delta then we add a curve
 	delta = 0.2;
 	% lstep is the maximum change in largeness of curve per step
-	lstep = 1.5;
+	lstep = 1.0;
 	% astep is the maximum change in position of control point of the curve per step
 	astep = 3.0;
 	% generatenumber is the number of generated curves at every step
@@ -51,6 +51,7 @@ function [curves] = ApproximateImage (imgname)
 	curveindbez = indbez = zeros(size(image, 1), size(image, 2));
 	
 	while ! AreBlacksCovered(image, mindist)
+		DisplayBezier(curves);
 		if prevfit - curfit < delta
 			% Save the last curve in the curves matrix
 			curves = [curves; newcurve];
@@ -64,9 +65,9 @@ function [curves] = ApproximateImage (imgname)
 		% Generate a lot of new little modified curves and calculate the fit for the set with each of these
 		for i = 1:generatenumber
 			printf("\nGenerating curve %d...", i); fflush(stdout);
-			trial = newcurve + rand(1, 9) .* [lstep, astep, astep, astep, astep, astep, astep, astep, astep];
+			trial = newcurve + (rand(1, 9) - 0.5) .* [lstep, astep, astep, astep, astep, astep, astep, astep, astep];
 			[fitpoint, newmindist, newindbez] = CalculateFit(image, mindist, indbez, curves, trial);
-			printf("\nFitpoint is %g...", fitpoint); fflush(stdout); DisplayBezier(trial);
+			printf("\nFitpoint is %g...", fitpoint); fflush(stdout); clf; DisplayImage(image); DisplayBezier(trial); drawnow();
 			% We check if this trial has best fit that the previous
 			if fitpoint < curfit
 				% If we found a better fit then substitute the curve for the new one

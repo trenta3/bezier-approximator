@@ -41,7 +41,8 @@ function [fitvalue, newmindist, newindbez] = CalculateFit (image, mindist, indbe
 				
 				if image(i, j) == 0
 					% We then add the min distance to the fitvalue if the pixel is black
-					fitvalue = fitvalue + newmindist(i, j);
+					% We remind ourself that the curves are fat, that is we have to subtract the fatness
+					fitvalue = fitvalue + (sqrt(newmindist(i, j)) - newcurve(1, 1))^2;
 				else
 					% And for all white pixel that we cover we add one point 
 					if newmindist(i, j) <= 1.1 * eps
