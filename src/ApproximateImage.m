@@ -1,11 +1,10 @@
 % @input: imgname is the name (a string) of the image file to approximate
-%         n is the degree of the Bèzier curves to be used in approximating
 % @output: curves is the matrix in which, in every row there is a bèzier curve approximating
 %                 the given image at the required precision
 
 % @internal variables: mindist, matrix with current min distance of point from bezier curve
 %                      indbez, matrix with the index of the minimal curve from this point
-function [curves] = ApproximateImage (imgname, n)
+function [curves] = ApproximateImage (imgname)
 	% We first load the given image and store it in a matrix
 	% ACHTUNG: Currently the program only works with black and white images, not with grey-scale ones
 	image = imread(imgname);
@@ -48,8 +47,8 @@ function [curves] = ApproximateImage (imgname, n)
 	prevfit = curfit = 1e80;
 	newcurve = [];
 	% We first have to set all distances very high, and all bezout indexes to zero
-	mindist = ones(size(image, 1), size(image, 2)) * 1e80;
-	indbez = zeros(size(image, 1), size(image, 2));
+	curvemindist = mindist = ones(size(image, 1), size(image, 2)) * 1e80;
+	curveindbez = indbez = zeros(size(image, 1), size(image, 2));
 	
 	while ! AreBlacksCovered(image, mindist)
 		if prevfit - curfit < delta
@@ -64,9 +63,10 @@ function [curves] = ApproximateImage (imgname, n)
 		trials = fitpoint = [];
 		% Generate a lot of new little modified curves and calculate the fit for the set with each of these
 		for i = 1:generatenumber
-			trial = newcurve + rand(1, 9) * [lstep, astep, astep, astep, astep, astep, astep, astep, astep];
+			printf("\nGenerating curve %d...", i); fflush(stdout);
+			trial = newcurve + rand(1, 9) .* [lstep, astep, astep, astep, astep, astep, astep, astep, astep];
 			[fitpoint, newmindist, newindbez] = CalculateFit(image, mindist, indbez, curves, trial);
-			
+			printf("\nFitpoint is %g...", fitpoint); fflush(stdout); DisplayBezier(trial);
 			% We check if this trial has best fit that the previous
 			if fitpoint < curfit
 				% If we found a better fit then substitute the curve for the new one

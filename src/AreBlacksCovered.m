@@ -7,6 +7,7 @@
 % So we search for black uncovered blocks and we count the number of black uncovered pixel in a 5x5 neighbourhood
 % If there are at most other two then the test is passed
 function [res] = AreBlacksCovered (image, mindist)
+	printf("\nEntering AreBlacksCovered..."); imshow(image); fflush(stdout);
 	% eps is the tolerance of the math
 	% NOTE: WARNING: ACHTUNG: It should be set globally
 	eps = 0.05;
@@ -21,8 +22,9 @@ function [res] = AreBlacksCovered (image, mindist)
 				
 				subimage = image(lower(1, 1):upper(1, 1), lower(1, 2):upper(1, 2));
 				subdistance = mindist(lower(1, 1):upper(1, 1), lower(1, 2):upper(1, 2));
-				if sum(sum(subimage == 0 && subdistance > 1.1 * eps)) > 3
+				if sum(sum(subimage == 0 & subdistance > 1.1 * eps)) > 3
 					% If the number of wrong pixels is too high then we return false
+					printf("\nConditions on black pixels not met..."); fflush(stdout);
 					res = 0;
 					return;
 				endif

@@ -20,22 +20,33 @@ function [fitvalue, newmindist, newindbez] = CalculateFit (image, mindist, indbe
 	newmindist = mindist; newindbez = indbez;
 	for i = 1:size(image, 1)
 		for j = 1:size(image, 2)
-			% For each pixel we calculate the distance from the curve set
-			distfromnewcurve = DistanceFromPoint (newcurve, [i, j], eps);
-			if distfromnewcurve < mindist(i, j)
-				% If the distance from the new curve is smaller than the other then we
-				% record this information in the new distance matrix and curve bezier index
-				newmindist(i, j) = distfromnewcurve;
-				newindbez(i, j) = size(curves, 1) + 1;
-			endif
+			% If the pixel coordinate are more distant than 12 points from all the curve veteces than we add a fixed value
+			a0 = [newcurve(1, 2), newcurve(1, 6)];
+			a1 = [newcurve(1, 3), newcurve(1, 7)];
+			a2 = [newcurve(1, 4), newcurve(1, 8)];
+			a3 = [newcurve(1, 5), newcurve(1, 9)];
+			P = [i, j];
 			
-			if image(i, j) == 0
-				% We then add the min distance to the fitvalue if the pixel is black
-				fitvalue = fitvalue + newmindist(i, j);
+			if sum(sum(([P; P; P; P] - [a0; a1; a2; a3]).^2, 2) >= 144 * [1; 1; 1; 1]) == 4
+				fitvalue = fitvalue + 150;
 			else
-				% And for all white pixel that we cover we add one point 
-				if newmindist(i, j) <= 1.1 * eps
-					fitvalue = fitvalue + 1.0;
+				% We calculate the distance from the curve set
+				distfromnewcurve = DistanceFromPoint (newcurve, [i, j], eps);
+				if distfromnewcurve < mindist(i, j)
+					% If the distance from the new curve is smaller than the other then we
+					% record this information in the new distance matrix and curve bezier index
+					newmindist(i, j) = distfromnewcurve;
+					newindbez(i, j) = size(curves, 1) + 1;
+				endif
+				
+				if image(i, j) == 0
+					% We then add the min distance to the fitvalue if the pixel is black
+					fitvalue = fitvalue + newmindist(i, j);
+				else
+					% And for all white pixel that we cover we add one point 
+					if newmindist(i, j) <= 1.1 * eps
+						fitvalue = fitvalue + 1.0;
+					endif
 				endif
 			endif
 		endfor
