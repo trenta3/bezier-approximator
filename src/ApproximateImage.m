@@ -47,29 +47,40 @@ function [curves] = ApproximateImage (imgname, n)
 	% The initial fit should be rather high or otherwise we can't see the betterings
 	prevfit = curfit = 1e80;
 	newcurve = [];
-	%% TODO: we first have to set all distances very high
+	% We first have to set all distances very high, and all bezout indexes to zero
+	mindist = ones(size(image, 1), size(image, 2)) * 1e80;
+	indbez = zeros(size(image, 1), size(image, 2));
+	
 	while ! AreBlacksCovered(image, mindist)
 		if prevfit - curfit < delta
 			% Save the last curve in the curves matrix
 			curves = [curves; newcurve];
+			% And update the internal matrices
+			mindist = curvemindist;
+			indbez = curveindbez;
 			% And generate a new Random Curve in the image
 			newcurve = NewRandomCurve(image, mindist);
 		endif
 		trials = fitpoint = [];
 		% Generate a lot of new little modified curves and calculate the fit for the set with each of these
-		%% TODO: After each generation, we chose to keep or reject the curve (in order to spare memory)
 		for i = 1:generatenumber
-			trials(i, :) = newcurve + rand(1, 9) * [lstep, astep, astep, astep, astep, astep, astep, astep, astep];
-			fitpoint(i) = CalculateFit(image, mindist, indbez, curves, trials(i, :));
+			trial = newcurve + rand(1, 9) * [lstep, astep, astep, astep, astep, astep, astep, astep, astep];
+			[fitpoint, newmindist, newindbez] = CalculateFit(image, mindist, indbez, curves, trial);
+			
+			% We check if this trial has best fit that the previous
+			if fitpoint < curfit
+				% If we found a better fit then substitute the curve for the new one
+				newcurve = trial;
+				prevfit = curfit;
+				curfit = fitpoint;
+				curvemindist = newmindist;
+				curveindbez = newindbez;
+			endif
 		endfor
-		% Search for the best fit in this set of curves
-		[m, idx] = min(fitpoint);
-		if m < curfit
-			% If we found a better fit then substitute the curve for the new one
-			newcurve = trials(idx, :);
-			prevfit = curfit; curfit = fitpoint(idx);
-		endif
 	endwhile
 	
 	%% TODO: Adjustement steps for a better looking image
+	
+	%% TODO: Now we outputs the image in bezier form
+	
 endfunction
