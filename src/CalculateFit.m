@@ -14,13 +14,13 @@
 % all this distances (they are all positive) and we also sum the white coverage coefficient
 function [fitvalue, newmindist, newindbez] = CalculateFit (image, mindist, indbez, curves, newcurve)
 	% eps is the precision at which all math is done
-	eps = 0.05;
+	eps = 0.1;
 	
 	fitvalue = 0;
 	newmindist = mindist; newindbez = indbez;
 	for i = 1:size(image, 1)
 		for j = 1:size(image, 2)
-			% If the pixel coordinate are more distant than 12 points from all the curve veteces than we add a fixed value
+			% If the pixel coordinate are more distant than 12 points from all the curve veteces than we add the distance to the center
 			a0 = [newcurve(1, 2), newcurve(1, 6)];
 			a1 = [newcurve(1, 3), newcurve(1, 7)];
 			a2 = [newcurve(1, 4), newcurve(1, 8)];
@@ -28,7 +28,8 @@ function [fitvalue, newmindist, newindbez] = CalculateFit (image, mindist, indbe
 			P = [i, j];
 			
 			if sum(sum(([P; P; P; P] - [a0; a1; a2; a3]).^2, 2) >= 144 * [1; 1; 1; 1]) == 4
-				fitvalue = fitvalue + 150;
+				B = (a0 + a1 + a2 + a3)/4;
+				fitvalue = fitvalue + sum((P - B).^2);
 			else
 				% We calculate the distance from the curve set
 				distfromnewcurve = DistanceFromPoint (newcurve, [i, j], eps);

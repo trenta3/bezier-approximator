@@ -10,7 +10,7 @@ function [res] = AreBlacksCovered (image, mindist)
 	printf("\nEntering AreBlacksCovered..."); fflush(stdout);
 	% eps is the tolerance of the math
 	% NOTE: WARNING: ACHTUNG: It should be set globally
-	eps = 0.05;
+	eps = 0.1;
 	
 	for i = 1:size(image, 1)
 		for j = 1:size(image, 2)
